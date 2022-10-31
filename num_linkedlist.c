@@ -11,9 +11,7 @@ struct Node
     int value;
     //stores the pointers actual value. aka the number.
 
-    int length;
-    //number of bytes it has available.
-
+    
     int *start;
 
     int *end;
@@ -29,7 +27,7 @@ struct Node linkedlist[MAX_SIZE];
 void allocate(int size)
 {
     //allocate that much memory from my malloc function.
-    int  *ptr = (int *) malloc(40);
+    int  *ptr = (int *) malloc(10*sizeof(struct Node));
     //that pointer will be stored in the first arraylist alongside lenght. 
     //i need to have the starting and ending position for the values.
     linkedlist[0].value = -1;
