@@ -111,28 +111,54 @@ void insert_check(int size)
 
     printf("I am here after assigning values\n");
     
+    //if head is NULL.
+
     //iterste until you find a hole.
 
-    while(temp!=NULL & temp->next != NULL )
+    while (temp!=NULL)
     {
-        temp=temp->next;
+       if (temp->type == HOLE)
+       {
+
+        printf("%p\n" , temp->prev);
+        printf("%p\n" , temp->next);
+        printf("%d\n" , temp->size);
+        printf("%p\n" , temp);
+
+        //add stuff. 
+
+        // temp2 needs to be in the front.
+        temp->size = temp->size - size;
+        temp2->next = temp;
+        //link temp2 with previous value of temp. 
+        printf("H\n");
+        // temp2->prev = temp->prev;
+        // temp->prev = temp2;
+
+        
+        
+
+       }
+       temp = temp->next;
     }
 
+    
 
-    printf("%d\n" , temp->type);
-    printf("%p\n" , temp->prev);
-    printf("%d\n" , temp->size);
-    printf("%p\n" , temp->next );
-    // printf(" %p --------- %d --------- %p" , temp->prev , temp->size , temp->next);
 
-    printf("The current size of temp2 is %d\n" , temp2->size);
-    printf("The current size of temp is %d\n" , temp->size);
-    printf("%p\n" , temp);
-    temp2->next = temp;
-    printf("temp2->next is %p\n" , temp2->next);
-    temp->size = temp->size - temp2->size;
-    printf("The current size of temp is %d\n" , temp->size);
-    temp2->prev = temp->prev;
+    // printf("%d\n" , temp->type);
+    // printf("%p\n" , temp->prev);
+    // printf("%d\n" , temp->size);
+    // printf("%p\n" , temp->next );
+    // // printf(" %p --------- %d --------- %p" , temp->prev , temp->size , temp->next);
+
+    // printf("The current size of temp2 is %d\n" , temp2->size);
+    // printf("The current size of temp is %d\n" , temp->size);
+    // printf("%p\n" , temp);
+    // temp2->next = temp;
+    // printf("temp2->next is %p\n" , temp2->next);
+    // temp->size = temp->size - temp2->size;
+    // printf("The current size of temp is %d\n" , temp->size);
+    // temp2->prev = temp->prev;
 
 
     // if (temp->type==HOLE)
@@ -238,7 +264,7 @@ int main()
     allocate(10*sizeof(struct Node));
     
     //insert 24 bytes.
-    insert_h(24);
+    insert_check(24);
     // print_ll();
 
 
