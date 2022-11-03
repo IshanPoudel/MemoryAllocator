@@ -103,37 +103,87 @@ void insert_check(int size)
     struct Node *temp2;
     struct Node *temp = head;
 
-    printf("I am here\n");
+    
 
     temp2->size=size;
     temp2->type=PROCESS;
     
 
-    printf("I am here after assigning values\n");
+    
     
     //if head is NULL.
 
     //iterste until you find a hole.
+
+    //if there is a hole in the head and is bigger than the requested size
+    if (head->type== HOLE & head->size > size)
+    {
+        printf("The head has no process\n");
+        //have temp2 be the head.
+        temp2->prev = NULL;
+        head = temp2;
+
+        printf("I am here\n");
+
+        
+
+        //create a node to store the remaining hole.
+        temp->size = temp->size-size;
+        temp->prev = head;
+        temp->next = NULL;
+        temp->type= HOLE;
+
+        head->next = temp;
+
+        printf("%p ----------- %p with size %d --------- %p\n" , head->prev ,head , head->size , head->next);
+        printf("%p ----------- %p with size %d  --------- %p\n" , temp->prev , temp  , temp->size , temp->next);
+
+       
+
+        
+        return;
+
+        
+
+
+    }
 
     while (temp!=NULL)
     {
        if (temp->type == HOLE)
        {
 
-        printf("%p\n" , temp->prev);
-        printf("%p\n" , temp->next);
-        printf("%d\n" , temp->size);
-        printf("%p\n" , temp);
+        printf("\n\n");
+
+        printf("The current temp has free memory \n");
+
+        printf(" Previous %p\n" , temp->prev);
+        printf(" It's value %p\n" , temp);
+        printf(" Next %p\n" , temp->next);
+        printf("Free size %d\n" , temp->size);
+        printf("\n");
 
         //add stuff. 
 
-        // temp2 needs to be in the front.
-        temp->size = temp->size - size;
+        //the new struct should be in front of the hole.
+        temp->prev->next = temp2;
+
+        //the newly inserted struct should point to the hole
         temp2->next = temp;
-        //link temp2 with previous value of temp. 
-        printf("H\n");
-        // temp2->prev = temp->prev;
-        // temp->prev = temp2;
+        //the struct shou
+        temp2->prev = temp->prev;
+
+
+        //decrease the size of the hole and have it point back to the newly added struct.
+        temp->size = temp->size - size;
+        temp->prev = temp2;
+        
+        
+        
+        printf("Added  a new struct at\n");
+        printf(" %p -------------- %p with size %d ------------- %p" , temp2->prev , temp2 , temp2->size , temp2->next);
+        
+       
 
         
         
@@ -265,6 +315,7 @@ int main()
     
     //insert 24 bytes.
     insert_check(24);
+    insert_check(30);
     // print_ll();
 
 
