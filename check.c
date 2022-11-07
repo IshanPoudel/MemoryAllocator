@@ -24,6 +24,13 @@ struct Node
 
 struct Node linkedlist[10];
 
+
+void insert(int num)
+{
+    //iterate until you find a struct that is empty. //aka -1.
+    
+}
+
 int main()
 {
     // Node *pointer = (Node *)malloc(sizeof(Node));
@@ -67,6 +74,11 @@ int main()
 
     for (int i=0; i<MAX_SIZE;i++)
     {
-        printf("-----%p--------%d------------%p\n" , linkedlist[i].start , linkedlist[i].value , linkedlist[i].end);
+        printf("...........%p...........%d.............%p\n" , linkedlist[i].start , linkedlist[i].value , linkedlist[i].end);
     }
+
+    //insert stuff
+    
+
+    
 }

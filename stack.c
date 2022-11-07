@@ -37,7 +37,7 @@ void insert(int size)
     
     //go until you reach null
 
-    temp = head;
+    temp = head; 
     while(temp!=NULL & temp->next !=NULL)
     {
         temp = temp->next;

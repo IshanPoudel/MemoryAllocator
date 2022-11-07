@@ -165,23 +165,36 @@ void insert_check(int size)
 
         //add stuff. 
 
+        struct Node *newNode;
+        newNode->prev = temp;
+        newNode->size = temp->size - size;
+        newNode->type = HOLE;
+        newNode->next = NULL;
+
         //the new struct should be in front of the hole.
-        temp->prev->next = temp2;
-
-        //the newly inserted struct should point to the hole
-        temp2->next = temp;
-        //the struct shou
-        temp2->prev = temp->prev;
+        temp = temp2;
+        temp->next = newNode;
 
 
-        //decrease the size of the hole and have it point back to the newly added struct.
-        temp->size = temp->size - size;
-        temp->prev = temp2;
+        //insert a new node with remaining memory.
+
+       
+
+
+        // //the newly inserted struct should point to the hole
+        // temp2->next = temp;
+        // //the struct shou
+        // temp2->prev = temp->prev;
+
+
+        // //decrease the size of the hole and have it point back to the newly added struct.
+        // temp->size = temp->size - size;
+        // temp->prev = temp2;
         
         
         
         printf("Added  a new struct at\n");
-        printf(" %p -------------- %p with size %d ------------- %p" , temp2->prev , temp2 , temp2->size , temp2->next);
+        printf(" %p -------------- %p with size %d ------------- %p" , temp->prev , temp , temp->size , temp->next);
         
        
 

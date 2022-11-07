@@ -57,54 +57,199 @@ int findFreeNodeInternal()
 
 //insertnode in the internal. 
 
-void insertNode(int value)
+//Insert the node located at current roght after the node indexed by previous. 
+//i.e LinkedList[previous].next and LinkedLiST[LinkedList[previous].next].previous values are updated.
+
+//  A ------ B ------- F ------- D Insert C between B and F . previous = 1 , current = could be anything.
+int insertNodeInternal(int previous , int current)
 {
+    LinkedList[current].previous = -1;
+    LinkedList[current].next = -1;
 
-    //First need to find the head of the linked node.
-    
-    if (initialized==0)
+    //Start from the previous node
+
+    if (previous >=0)
     {
+        int temp;
 
-        printf("I am in the head\n");
-        LinkedList[rootNode].value = value;
-        printf("I am here");
-        LinkedList[rootNode].previous =-1;
-        LinkedList[rootNode].in_use =1;
-        initialized =1;
-        printf("I am done=");
-        
+        /* Connect the previous node with the current node. 
+        If it exists and store off previous->next somewhere else so that we use it later. 
+        */
+       LinkedList[current].previous = previous;
+       temp = LinkedList[previous].next;
+       LinkedList[previous].next = current;
+       LinkedList[current].next = temp;
+
+       
+
+       
+    }
+    
+    else if (LinkedList[rootNode].previous == -1 && LinkedList[rootNode].next == -1)
+    {
+        // make current == rootnode?
 
     }
+
     else
     {
-        // I am adding
-        // the rootnode is in use 
-        // find the next freenode. 
-        int index = findFreeNodeInternal();
-        //you need to connect it to the previous. 
-        LinkedList[index].value =value;
-        LinkedList[index].in_use = 1;
-        //need to link the previous. 
-        int temp = rootNode;
-        int next_index = LinkedList[temp].next;
+        //if previous less than 0 
+        // A ----- B ----- F ----- D . Insert C at the position of  A -> C---A ---B ---F ---F
+        //if previous value = -1 , replace the root node.
 
-        while (LinkedList[next_index].in_use!= -1) 
+        LinkedList[rootNode].previous = current;
+        LinkedList[current].previous = -1;
+        LinkedList[current].next = rootNode;
+        rootNode = current;
+
+    }
+
+    return 0;
+}
+
+
+// removeNode Internal , remove a node from the list
+ 
+//  A -- B -- C --D , REMOVE c . B->NEXT SHOULD POINT TO D , D->PREV should point to B , Don't remove C
+int removeNodeInternal(int node)
+{
+
+    //node is the value?
+
+    if (node < 0 || node >= MAX_LINKED_LIST_SIZE)
+    {
+        printf("ERROR: Can not remove node %d because it is out of our array bounds"
+			   " of 0 ... %d\n", node, MAX_LINKED_LIST_SIZE);
+		return -1;
+    }
+
+    if (LinkedList[node].in_use==0)
+    {
+        printf("Eroor : Cannot remove node %d. It is not in use. \n" , node);
+        return -1;
+    }
+
+    //Make the index not in use , so it can be overwritten later.
+
+    LinkedList[node].in_use=0;
+
+    //get it's prev and next.
+    if (node==0)
+    {
+        rootNode = LinkedList[rootNode].next;
+    }
+
+    LinkedList[LinkedList[node].previous].next = LinkedList[node].next;
+    //change the LinkedList[node].next prev to 
+    //Don't need to currently because we are only going one way.
+
+    //change it's next and prev.
+    LinkedList[node].next=-1;
+    LinkedList[node].previous=-1;
+
+    return 0;
+    
+
+}
+
+
+//removeNode is finding the value and getting the index.
+//on removeInternalNode it is about replacing the node->next and prev values. 
+int removeNode(int value)
+{
+    //given the value , we need to find it's node's index and then use removeNodeInternal
+
+    int index= rootNode;
+
+    while(index!=-1)
+    {
+        if (LinkedList[index].value==value)
         {
-           
-           temp = LinkedList[temp].next;
-           next_index = LinkedList[temp].next;
-            
-            
+            return removeNodeInternal(index);
         }
 
-        //at this point next_index is empty. But we need to know the one previous to it. 
-        // temp is full , next_index is empty.
-        printf("I found temp %d\n" , temp);
+        index = LinkedList[index].next;
+    }
 
-        //We join our value with temp.
-        LinkedList[index].previous = temp;
-        
+    return -1;
 
+}
+
+
+int insertNode(int value)
+{
+
+    //find free node
+    //start from headnode and traverse until you find an empty one. 
+    // get previous and current index. 
+    // on insert Internal Node , insert the node in between the previous and the current one and shift everything to the right. 
+
+    // find a free internal node. 
+    int index = findFreeNodeInternal();
+
+    //Start from the rootnode 
+    int current = rootNode;
+    // At the beginning because you start from the rootnode , your prev = -1
+    int previous = -1;
+    
+
+    //return value 
+    int ret = -1;
+
+    //If it is the firstnode that has been initialized , make sure that it is the rootnode. 
+
+    if (initialized ==0)
+    {
+        LinkedList[0].previous=-1;
+        LinkedList[0].next=-1;
+        LinkedList[0].value = value;
+        initialized = 1;
+    }
+
+    //but if the index has already been intialized. 
+    //i,.e the rootnode is already there and there is space
+
+
+    if (index >= 0)
+    {
+        while (current >=0 && LinkedList[current].in_use==1 && LinkedList[current].value < value)
+        {
+            previous = current;
+            current = LinkedList[current].next;
+        }
+
+        //you reach a point where current is not in use .
+        // if previous >=-1 ile we found an empty node . aka  A --- B ----
+        if (previous >=-1)
+        {
+            ret = insertNodeInternal(previous ,  index);
+        }
+
+        else if (current == -1)
+        //we ran off the end of the list
+        {
+            ret = insertNodeInternal(LinkedList[previous].previous , index);
+
+
+        }
+
+        //after our new node is marked , we need it to set it as being used.
+        LinkedList[index].value = value;
+        LinkedList[index].in_use=1;
+    }
+
+    return ret;
+    
+}
+
+void printList()
+{
+    int i = rootNode;
+
+    while (initialized && i !=-1 && LinkedList[i].in_use)
+    {
+        printf("LinkedList[%d] : %d\n" , i , LinkedList[i].value);
+        i = LinkedList[i].next;
     }
 
 }
@@ -112,6 +257,15 @@ void insertNode(int value)
 int main()
 {
     
-    insertNode(100);
-    insertNode(200);
+    insertNode(100); 
+	insertNode(120);
+	insertNode(90);
+	insertNode(110);
+	insertNode(85);
+	insertNode(87);
+	insertNode(84);
+	insertNode(10);
+	insertNode(500);
+
+    printList();
 }

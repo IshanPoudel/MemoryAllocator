@@ -40,7 +40,7 @@ void allocate(int size)
 
 void insert(int num)
 {
-    //insert num into the array
+    //insert num iernto the array
     //which position of the array do i insert it to.
     //do i get specified which node it must go to.
 
