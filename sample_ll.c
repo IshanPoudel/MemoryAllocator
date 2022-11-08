@@ -20,6 +20,13 @@ enum id
 
 };
 
+
+//need to have a size
+
+// when you allocate , you allocate the linked list with a hole of size max
+
+//when you insert stuff on it , you see if it a hole and ahead and then add stuff to it.
+
 struct Node
 {
 
