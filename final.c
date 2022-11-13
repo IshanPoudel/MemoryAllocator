@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_LINKED_LIST_SIZE 3
+#define MAX_LINKED_LIST_SIZE 10
 
 
 static int initialized = 0;
@@ -63,7 +63,7 @@ int mavalloc_init(size_t size)
     
 
     printf("Initialized head.\n");
-    printNode(0);
+   
     
 
     return 0;
@@ -116,7 +116,8 @@ int insertNodeInternal(int previous , int current)
     }
     else if (LinkedList[rootNode].previous==-1 && LinkedList[rootNode].next==-1)
     {
-        printf("I am adding to the head");
+        printf("I am adding to the head\n");
+        
         //Adding to the head 
         //HOLE
         //Should be: A-Hole
@@ -157,7 +158,9 @@ void printList()
 
 int insertNode(int size)
 {
+
     int index = findFreeNodeInternal();
+    printf("I  am trying to add a node id size %d , A free node is at %d\n" , size , index);
 
     int current = rootNode;
     int previous =-1;
@@ -172,8 +175,7 @@ int insertNode(int size)
         }
 
         // at this point we have the previous and the current
-        printf("Previous : %d , Current: %d\n" , previous , current);
-
+       
         if(previous>=-1)
         {
             ret = insertNodeInternal(previous , index);
@@ -196,12 +198,8 @@ int insertNode(int size)
 
 }
 
-int removeNode(int size)
-{
-    return 0;
 
 
-}
 int main()
 {
     mavalloc_init(65534);
@@ -210,7 +208,13 @@ int main()
     insertNode(400);
     insertNode(600);
     insertNode(800);
-    printList();
+    insertNode(1000);
+
+    // printList();
+
+    // removeNode(450);
+
+    // printList();
     return 0;
 }
 
