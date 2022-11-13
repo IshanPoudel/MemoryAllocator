@@ -150,11 +150,12 @@ void printList()
     /** Iterate over the linked list in node order and print the nodes. */
 	while (initialized && i != -1 && LinkedList[i].in_use)
 	{
-		// printf("LinkedList[%d]: %zu\n", i, LinkedList[i].size);
-        printNode(i);
+		printf("LinkedList[%d]: %zu\n", i, LinkedList[i].size);
+        // printNode(i);
 		i = LinkedList[i].next;
 	}
 }
+
 
 int insertNode(int size)
 {
@@ -168,7 +169,8 @@ int insertNode(int size)
 
     if (index>=0)
     {
-        while (current>=0 && LinkedList[current].in_use && LinkedList[current].type!=HOLE)
+        while (current>=0 && LinkedList[current].in_use && LinkedList[current].type!=HOLE && 
+        LinkedList[current].size>size)
         {
             previous=current;
             current=LinkedList[current].next;
@@ -198,7 +200,56 @@ int insertNode(int size)
 
 }
 
+int removeNodeInternal(int node)
+{
 
+    if(node<0 || node>=MAX_LINKED_LIST_SIZE)
+    {
+        printf("ERROR: Can not remove because it is out of bounds\n");
+        return -1;
+    }
+
+    if(LinkedList[node].in_use==0)
+    {
+        printf("ERROR: Can not remove node . It is not in use \n");
+    }
+
+    LinkedList[node].in_use=0;
+    LinkedList[node].type=HOLE;
+
+    if (node==rootNode)
+    {
+        rootNode=LinkedList[rootNode].next;
+    }
+
+    //if node is in the middle of something.
+    if (LinkedList[node].previous>=0)
+    {
+        // A--B--C--D--E remove c 
+        LinkedList[LinkedList[node].previous].next=LinkedList[node].next;
+    }
+
+    LinkedList[node].next = -1;
+    LinkedList[node].previous=-1;
+    //Need to change the arena
+
+    return 0;
+}
+
+int removeNode(int size)
+{
+    int index = rootNode;
+
+    while(index!=-1)
+    {
+        if(LinkedList[index].size==size)
+        {
+            return removeNodeInternal(index);
+        }
+        index=LinkedList[index].next;
+    }
+    return -1;
+}
 
 int main()
 {
@@ -212,9 +263,14 @@ int main()
 
     // printList();
 
-    // removeNode(450);
+    removeNode(450);
 
-    // printList();
+    printList();
+
+    insertNode(500);
+    
+    printf("\n\n");
+    printList();
     return 0;
 }
 
