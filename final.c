@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_LINKED_LIST_SIZE 65534
+#define MAX_LINKED_LIST_SIZE 3
 
 
 static int initialized = 0;
@@ -103,6 +103,7 @@ int insertNodeInternal(int previous , int current)
 
     if (previous>=0)
     {
+        printf("I am here when previous >=0 \n");
         int temp;
         LinkedList[current].previous=previous;
         temp = LinkedList[previous].next;
@@ -115,6 +116,7 @@ int insertNodeInternal(int previous , int current)
     }
     else if (LinkedList[rootNode].previous==-1 && LinkedList[rootNode].next==-1)
     {
+        printf("I am adding to the head");
         //Adding to the head 
         //HOLE
         //Should be: A-Hole
@@ -127,6 +129,7 @@ int insertNodeInternal(int previous , int current)
     //Insert E at A.
     //E--A--B--C--D
     {
+        printf("I am adding to the head on the last one\n");
         LinkedList[rootNode].previous=current;
         LinkedList[current].next=rootNode;
         LinkedList[current].previous=-1;
@@ -193,6 +196,12 @@ int insertNode(int size)
 
 }
 
+int removeNode(int size)
+{
+    return 0;
+
+
+}
 int main()
 {
     mavalloc_init(65534);
@@ -200,7 +209,7 @@ int main()
     insertNode(450);
     insertNode(400);
     insertNode(600);
-    insertNode(600);
+    insertNode(800);
     printList();
     return 0;
 }
