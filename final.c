@@ -44,10 +44,20 @@ void printNode(int i)
 {
     printf("For the current node: \n");
     printf("Previous : %d  Next: %d \n" , LinkedList[i].previous , LinkedList[i].next);
-    printf("LinkedList[%d] : %zu\n " , 0 , LinkedList[i].size);
+    printf("LinkedList[%d] : %zu\n " , i , LinkedList[i].size);
     printf("Curernt pointer : %p \n" , LinkedList[i].arena);
     printf("The node is a %s\n" , enum_type[ LinkedList[i].type]);
     printf("\n");
+}
+
+void printState()
+{
+    int index = rootNode;
+
+    for(int i=0; i<6;i++)
+    {
+        printNode(i);
+    }
 }
 
 int mavalloc_init(size_t size)
@@ -169,9 +179,9 @@ int insertNode(int size)
 
     if (index>=0)
     {
-        while (current>=0 && LinkedList[current].in_use && LinkedList[current].type!=HOLE && 
-        LinkedList[current].size>size)
+        while (current>=0 && LinkedList[current].in_use && LinkedList[current].type!=HOLE && LinkedList[current].size<size)
         {
+            printf("Linkedlist[%d].size = %zu , requested_size = %d\n" , current , LinkedList[current].size , size );
             previous=current;
             current=LinkedList[current].next;
         }
@@ -267,10 +277,38 @@ int main()
 
     printList();
 
-    insertNode(500);
+    insertNode(400);
     
     printf("\n\n");
     printList();
+
+    
+    insertNode(100);
+    
+    removeNode(100);
+    insertNode(50);
+    
+    printf("ALL THE NODES SO FAR\n\n\n");
+    printState();
+    printf("\n\n");
+    printList();
+
+    removeNode(50);
+    removeNode(400);
+    printList();
+
+    insertNode(200);
+    insertNode(4);
+
+    printf("\n\n");
+    printList();
+
+    printState();
+
+    
+
+   
+
     return 0;
 }
 
