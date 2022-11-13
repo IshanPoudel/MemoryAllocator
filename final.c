@@ -54,12 +54,36 @@ void printState()
 {
     int index = rootNode;
 
-    for(int i=0; i<6;i++)
+    int temp=index;
+    while (temp!=-1)
     {
-        printNode(i);
+        printNode(temp);
+        temp = LinkedList[temp].next;
+
     }
 }
 
+void visualizeHoleandProcess()
+{
+    
+
+    int index = rootNode;
+
+    while (index!=-1)
+    {
+        if (LinkedList[index].type == HOLE)
+            {
+                printf(" HOLE: SIZE(%zu)\n" , LinkedList[index].size);
+            }
+        else
+            {
+                printf(" PROCESS: SIZE(%zu)\n" , LinkedList[index].size);
+
+            }
+        index=LinkedList[index].next;
+
+    }
+}
 int mavalloc_init(size_t size)
 {
     void* arena = malloc(65535);
@@ -140,7 +164,7 @@ int insertNodeInternal(int previous , int current)
     //Insert E at A.
     //E--A--B--C--D
     {
-        printf("I am adding to the head on the last one\n");
+        printf("I am adding to the to the front at the rootnode\n");
         LinkedList[rootNode].previous=current;
         LinkedList[current].next=rootNode;
         LinkedList[current].previous=-1;
@@ -187,11 +211,12 @@ int insertNode(int size)
         }
 
         // at this point we have the previous and the current
-       
+       // we have a free node and we have not run of the end of the list.
         if(previous>=-1)
         {
             ret = insertNodeInternal(previous , index);
         }
+        //we ran off the end of the list.
         else if (current==-1)
         {
             ret=insertNodeInternal(LinkedList[previous].previous , index);
@@ -224,7 +249,7 @@ int removeNodeInternal(int node)
         printf("ERROR: Can not remove node . It is not in use \n");
     }
 
-    LinkedList[node].in_use=0;
+    LinkedList[node].in_use=1;
     LinkedList[node].type=HOLE;
 
     if (node==rootNode)
@@ -288,22 +313,29 @@ int main()
     removeNode(100);
     insertNode(50);
     
-    printf("ALL THE NODES SO FAR\n\n\n");
+    printf("\nALL THE NODES SO FAR\n\n\n");
     printState();
     printf("\n\n");
-    printList();
+    // printList();
 
     removeNode(50);
     removeNode(400);
-    printList();
+    // printList();
 
     insertNode(200);
     insertNode(4);
+    removeNode(800);
+    removeNode(4);
+
 
     printf("\n\n");
-    printList();
+    // printList();
+
+    printf("\nAll the nodes after addition and removal\n");
 
     printState();
+
+    visualizeHoleandProcess();
 
     
 
