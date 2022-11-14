@@ -161,32 +161,54 @@ int insertNodeInternal(int previous , int current , int size )
         //prev=A
         //INSERT C such that B--A--C--HOLE
 
+        //  B--A--(500) C is also 500.
+        
         int  index_of_hole = LinkedList[previous].next;
-        printf("The index of the hole is %d\n" , index_of_hole);
+        if (LinkedList[index_of_hole].size==size)
+        {
+            printf("I found the perfect hole\n\n");
+            current=index_of_hole;
+            LinkedList[current].type=PROCESS;
+            LinkedList[current].previous=previous;
+            LinkedList[previous].next= current;
+            
+            
 
-        LinkedList[current].previous=previous;
-        printf("Set LinkedList[%d].previous to %d\n" , current , previous);
+        }
+        else
+        {
+            
+            printf("The index of the hole is %d\n" , index_of_hole);
+            
+            
 
-        LinkedList[previous].next=current;
-        printf("Set LinkedList[%d].next to %d\n" , previous , current);
+            LinkedList[current].previous=previous;
+            printf("Set LinkedList[%d].previous to %d\n" , current , previous);
 
-        LinkedList[current].next=index_of_hole;
-       
+            LinkedList[previous].next=current;
+            printf("Set LinkedList[%d].next to %d\n" , previous , current);
+
+            LinkedList[current].next=index_of_hole;
         
+            
+            
+            
+            // LinkedList[current].previous=LinkedList[previous].previous;
+            // printf("Added Linkedlist[%d].previous is Linkedlist[%d]\n" , current , LinkedList[previous].previous);
+            // LinkedList[current].next=previous;
+            // LinkedList[previous].next=index_of_hole;
+            // LinkedList[previous].previous=current;
+            //Now change the values of the hole.
+            
+            LinkedList[index_of_hole].type=HOLE;
+            // LinkedList[index_of_hole].next=;
+            LinkedList[index_of_hole].previous=current;
+            //set arena
+            LinkedList[index_of_hole].size=LinkedList[index_of_hole].size-size;
+
+        }
+
         
-        
-        // LinkedList[current].previous=LinkedList[previous].previous;
-        // printf("Added Linkedlist[%d].previous is Linkedlist[%d]\n" , current , LinkedList[previous].previous);
-        // LinkedList[current].next=previous;
-        // LinkedList[previous].next=index_of_hole;
-        // LinkedList[previous].previous=current;
-        //Now change the values of the hole.
-        
-        LinkedList[index_of_hole].type=HOLE;
-        // LinkedList[index_of_hole].next=;
-        LinkedList[index_of_hole].previous=current;
-        //set arena
-        LinkedList[index_of_hole].size=LinkedList[index_of_hole].size-size;
         
 
     }
@@ -239,8 +261,9 @@ int insertNode(int size)
     {
         printf("Current node at index %d is a %s and has size %zu\n" , current , enum_type[LinkedList[current].type] , LinkedList[current].size);
         // if(LinkedList[current].size>size && LinkedList[current].type==HOLE)
-        if(LinkedList[LinkedList[current].next].size>size && LinkedList[LinkedList[current].next].type==HOLE)
+        if(LinkedList[LinkedList[current].next].size>=size && LinkedList[LinkedList[current].next].type==HOLE)
         {
+            
             printf("MATCH: Current node at index %d is a %s and has size %zu\n" , current ,enum_type[LinkedList[current].type] , LinkedList[current].size);
             printf("MATCH: Next index is a hole\n");
             previous=current;
@@ -291,10 +314,10 @@ int insertNode(int size)
     LinkedList[next].arena = LinkedList[index].arena+ LinkedList[index].size;
 
 
-    printf("\nTWO NEW NODES THAT WERE CREATED ARE:\n");
+    // printf("\nTWO NEW NODES THAT WERE CREATED ARE:\n");
     
-    printNode(index);
-    printNode(LinkedList[index].next);
+    // printNode(index);
+    // printNode(LinkedList[index].next);
 
     
 
@@ -362,9 +385,14 @@ int main()
     
     
    
-    removeNode(800);
-    removeNode(1000);
+    
     insertNode(10);
+    removeNode(800);
+    insertNode(800);
+    
+    removeNode(600);
+    insertNode(50);
+    insertNode(550);
     printList();
     return 0;
 
