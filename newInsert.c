@@ -5,6 +5,8 @@
 static int initialized=0;
 static int rootNode=0;
 
+int global_index;
+
 enum id
 {
     PROCESS , HOLE
@@ -45,13 +47,13 @@ void printNode(int index)
 
 void printList()
 {
-    int index=rootNode;
+    global_index=rootNode;
     printf("\n\n");
 
-    while( (index != -1) & (LinkedList[index].in_use))
+    while( (global_index != -1) & (LinkedList[global_index].in_use))
     {
-        printNode(index);
-        index=LinkedList[index].next;
+        printNode(global_index);
+        global_index=LinkedList[global_index].next;
     }
 
 }
@@ -259,7 +261,7 @@ int insertNodeInternal(int previous , int current , int size )
 
 int insertNode(int size)
 {
-    int index=findfreeNodeInternal(size);
+    global_index=findfreeNodeInternal(size);
 
     int current = rootNode;
     printf("The current root is at index %d\n" , current);
@@ -315,7 +317,7 @@ int insertNode(int size)
 
     if (previous>=-1)
     {
-        ret = insertNodeInternal(previous , index , size );
+        ret = insertNodeInternal(previous , global_index , size );
         //we insert a not between previoud and index which is always a process.
     }
     else if (current==-1)
@@ -323,24 +325,24 @@ int insertNode(int size)
         // We ran of the end of the list. 
         // If max of five then current = E.next which is -1 , previous = E
         //aka A-B-C-D-E. Insert between E.prev aka D and the index
-        ret = insertNodeInternal(LinkedList[previous].previous , index , size );
+        ret = insertNodeInternal(LinkedList[previous].previous , global_index , size );
 
 
     }
 
     //After our node is linked , we need to change some node parameters. 
-    LinkedList[index].size=size;
-    LinkedList[index].in_use=1;
-    LinkedList[index].type=PROCESS;
+    LinkedList[global_index].size=size;
+    LinkedList[global_index].in_use=1;
+    LinkedList[global_index].type=PROCESS;
 
     
     //Updating arena
     //index contains our current inserted node. 
     //index starts from the nex node's pointer.
     //the previous pointer 
-    int next = LinkedList[index].next;
-    LinkedList[index].arena = LinkedList[next].arena;
-    LinkedList[next].arena = LinkedList[index].arena+ LinkedList[index].size;
+    int next = LinkedList[global_index].next;
+    LinkedList[global_index].arena = LinkedList[next].arena;
+    LinkedList[next].arena = LinkedList[global_index].arena+ LinkedList[global_index].size;
 
 
     // printf("\nTWO NEW NODES THAT WERE CREATED ARE:\n");
@@ -389,16 +391,16 @@ int removeNodeInternal(int node)
 
 int removeNode(int size )
 {
-    int index = rootNode;
+    global_index = rootNode;
 
-    while(index!=-1)
+    while(global_index!=-1)
     {
     
-        if (LinkedList[index].size==size)
+        if (LinkedList[global_index].size==size)
         {
-            return removeNodeInternal(index);
+            return removeNodeInternal(global_index);
         }
-        index=LinkedList[index].next;
+        global_index=LinkedList[global_index].next;
     }
 
     return -1;
@@ -410,6 +412,11 @@ int main()
     insertNode(200);
     removeNode(100);
     insertNode(100);
+    insertNode(800);
+    insertNode(500);
+    insertNode(4000);
+    removeNode(800);
+    insertNode(20);
 
     printList();
     return 0;
