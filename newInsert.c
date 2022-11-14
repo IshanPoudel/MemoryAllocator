@@ -38,7 +38,7 @@ void printNode(int index)
     printf("\n");
     printf("LinkedList[%d] is a %s of size %zu\n" , index , enum_type[LinkedList[index].type] , LinkedList[index].size);
     printf("LinkedList[%d] ------- LinkedList[%d] -------- LinkedList[%d]\n" , LinkedList[index].previous , index , LinkedList[index].next);
-    printf("LinkedList[%d] is located at %p\n" , index ,LinkedList[index].arena );
+    printf("LinkedList[%d] is located at %p\n" , index , LinkedList[index].arena );
     printf("\n");
 
 }
@@ -46,6 +46,7 @@ void printNode(int index)
 void printList()
 {
     int index=rootNode;
+    printf("\n\n");
 
     while( (index != -1) & (LinkedList[index].in_use))
     {
@@ -182,7 +183,7 @@ int insertNodeInternal(int previous , int current , int size )
         //Now change the values of the hole.
         
         LinkedList[index_of_hole].type=HOLE;
-        LinkedList[index_of_hole].next=-1;
+        // LinkedList[index_of_hole].next=;
         LinkedList[index_of_hole].previous=current;
         //set arena
         LinkedList[index_of_hole].size=LinkedList[index_of_hole].size-size;
@@ -282,6 +283,9 @@ int insertNode(int size)
 
     
     //Updating arena
+    //index contains our current inserted node. 
+    //index starts from the nex node's pointer.
+    //the previous pointer 
     int next = LinkedList[index].next;
     LinkedList[index].arena = LinkedList[next].arena;
     LinkedList[next].arena = LinkedList[index].arena+ LinkedList[index].size;
@@ -302,6 +306,51 @@ int insertNode(int size)
 
 }
 
+int removeNodeInternal(int node)
+{
+    if (node<0 || node>= MAX_LINKED_LIST_SIZE)
+    {
+        printf("Error:\n");
+    }
+
+    if (LinkedList[node].in_use==0)
+    {
+        printf("Cannot remove node. Not in use \n");
+    }
+
+    printf("I am trying to remove a node at index %d\n" , node);
+    
+
+    LinkedList[node].in_use=1;
+    LinkedList[node].type=HOLE;
+    
+    
+
+    
+
+    //do i change the arena when i remove a node.
+
+    return 0;
+    
+
+}
+
+int removeNode(int size )
+{
+    int index = rootNode;
+
+    while(index!=-1)
+    {
+    
+        if (LinkedList[index].size==size)
+        {
+            return removeNodeInternal(index);
+        }
+        index=LinkedList[index].next;
+    }
+
+    return -1;
+}
 int main()
 {
     mavalloc_init(65534);
@@ -309,7 +358,14 @@ int main()
     insertNode(200);
     insertNode(800);
     insertNode(600);
+    insertNode(1000);
     
+    
+   
+    removeNode(800);
+    removeNode(1000);
+    insertNode(10);
+    printList();
     return 0;
 
 }
