@@ -5,7 +5,8 @@
 static int initialized=0;
 static int rootNode=0;
 
-int global_index;
+int current;
+int previous;
 
 enum id
 {
@@ -47,13 +48,13 @@ void printNode(int index)
 
 void printList()
 {
-    global_index=rootNode;
+    int index=rootNode;
     printf("\n\n");
 
-    while( (global_index != -1) & (LinkedList[global_index].in_use))
+    while( (index != -1) & (LinkedList[index].in_use))
     {
-        printNode(global_index);
-        global_index=LinkedList[global_index].next;
+        printNode(index);
+        index=LinkedList[index].next;
     }
 
 }
@@ -117,45 +118,46 @@ void printState()
         printNode(i);
     }
 }
-int insertNodeInternal(int previous , int current , int size )
+
+int insertNodeInternal(int previous_index , int current_index , int size )
 {
-    //Insert node after previous
+    //Insert node after previous_index
     //A--B--C--D--E--F--Hole
-    //Previous=E , Current=H
+    //previous_index=E , current_index=H
     //A--B--C--D--E--H--F--HOLE
 
-    // Insert the process after previous .
-    // The node after previous is always a hole.
+    // Insert the process after previous_index .
+    // The node after previous_index is always a hole.
     // Insert process , add hole.
-    // Insert at current.
+    // Insert at current_index.
 
 
-    LinkedList[current].next=-1;
-    LinkedList[current].previous=-1;
+    LinkedList[current_index].next=-1;
+    LinkedList[current_index].previous=-1;
 
     
 
     if (LinkedList[rootNode].previous==-1 && LinkedList[rootNode].next==-1)
     {
         printf("I am adding when everything is empty. Need to initialize with a hole\n");
-        LinkedList[current].next=rootNode;
-        LinkedList[rootNode].previous=current;
-        LinkedList[current].previous=-1;
+        LinkedList[current_index].next=rootNode;
+        LinkedList[rootNode].previous=current_index;
+        LinkedList[current_index].previous=-1;
 
         //make linkedlist[rootnode] a hole.//Only come here when the hole size is bigger then requested size
         LinkedList[rootNode].size=LinkedList[rootNode].size-size;
         LinkedList[rootNode].type=HOLE;
         LinkedList[rootNode].next=-1;
-        rootNode=current;
+        rootNode=current_index;
        
         // printf("The next free is at %d\n" , next_free);
         
 
     }
-    else if (previous>=0)
+    else if (previous_index>=0)
     {
         
-        printf("I am here when previous >= 0  . The value of previous is %d. \n\n" , previous);
+        printf("I am here when previous_index >= 0  . The value of previous_index is %d. \n\n" , previous_index);
         
         // A-Hole , Insert B
         
@@ -165,14 +167,14 @@ int insertNodeInternal(int previous , int current , int size )
 
         //  B--A--(500) C is also 500.
         
-        int  index_of_hole = LinkedList[previous].next;
+        int  index_of_hole = LinkedList[previous_index].next;
         if (LinkedList[index_of_hole].size==size)
         {
             printf("I found the perfect hole\n\n");
-            current=index_of_hole;
-            LinkedList[current].type=PROCESS;
-            LinkedList[current].previous=previous;
-            LinkedList[previous].next= current;
+            current_index=index_of_hole;
+            LinkedList[current_index].type=PROCESS;
+            LinkedList[current_index].previous=previous_index;
+            LinkedList[previous_index].next= current_index;
             
             
 
@@ -184,27 +186,27 @@ int insertNodeInternal(int previous , int current , int size )
             
             
 
-            LinkedList[current].previous=previous;
-            printf("Set LinkedList[%d].previous to %d\n" , current , previous);
+            LinkedList[current_index].previous=previous_index;
+            printf("Set LinkedList[%d].previous_index to %d\n" , current_index , previous_index);
 
-            LinkedList[previous].next=current;
-            printf("Set LinkedList[%d].next to %d\n" , previous , current);
+            LinkedList[previous_index].next=current_index;
+            printf("Set LinkedList[%d].next to %d\n" , previous_index , current_index);
 
-            LinkedList[current].next=index_of_hole;
+            LinkedList[current_index].next=index_of_hole;
         
             
             
             
-            // LinkedList[current].previous=LinkedList[previous].previous;
-            // printf("Added Linkedlist[%d].previous is Linkedlist[%d]\n" , current , LinkedList[previous].previous);
-            // LinkedList[current].next=previous;
-            // LinkedList[previous].next=index_of_hole;
-            // LinkedList[previous].previous=current;
+            // LinkedList[current_index].previous_index=LinkedList[previous_index].previous_index;
+            // printf("Added Linkedlist[%d].previous_index is Linkedlist[%d]\n" , current_index , LinkedList[previous_index].previous_index);
+            // LinkedList[current_index].next=previous_index;
+            // LinkedList[previous_index].next=index_of_hole;
+            // LinkedList[previous_index].previous_index=current_index;
             //Now change the values of the hole.
             
             LinkedList[index_of_hole].type=HOLE;
             // LinkedList[index_of_hole].next=;
-            LinkedList[index_of_hole].previous=current;
+            LinkedList[index_of_hole].previous=current_index;
             //set arena
             LinkedList[index_of_hole].size=LinkedList[index_of_hole].size-size;
 
@@ -219,14 +221,14 @@ int insertNodeInternal(int previous , int current , int size )
          //if you are adding to an hole at the front 
         // HOLE  and adding node B
         // B----HOLE
-        // if (LinkedList[previous].type==HOLE)
+        // if (LinkedList[previous_index].type==HOLE)
         // {
 
         // }
 
         
         printf("I am adding to the front of the head , but there are processes behind it.\n");
-        printf("The current index is %d , the previous index is %d \n" , current , previous);
+        printf("The current_index index is %d , the previous_index index is %d \n" , current_index , previous_index);
 
         //need to check if it is a perfect fit.
 
@@ -238,14 +240,14 @@ int insertNodeInternal(int previous , int current , int size )
         else
         {
             //Create a new node to enter the value
-            LinkedList[current].next=rootNode;
-            LinkedList[rootNode].previous=current;
-            LinkedList[current].previous=-1;
+            LinkedList[current_index].next=rootNode;
+            LinkedList[rootNode].previous=current_index;
+            LinkedList[current_index].previous=-1;
 
             //make linkedlist[rootnode] a hole.//Only come here when the hole size is bigger then requested size
             LinkedList[rootNode].size=LinkedList[rootNode].size-size;
             LinkedList[rootNode].type=HOLE;
-            rootNode=current;
+            rootNode=current_index;
 
         }
         
@@ -261,9 +263,9 @@ int insertNodeInternal(int previous , int current , int size )
 
 int insertNode(int size)
 {
-    global_index=findfreeNodeInternal(size);
+    int index=findfreeNodeInternal(size);
 
-    int current = rootNode;
+    current = rootNode;
     printf("The current root is at index %d\n" , current);
     int previous = -1;
     int ret=-1;
@@ -317,7 +319,7 @@ int insertNode(int size)
 
     if (previous>=-1)
     {
-        ret = insertNodeInternal(previous , global_index , size );
+        ret = insertNodeInternal(previous , index , size );
         //we insert a not between previoud and index which is always a process.
     }
     else if (current==-1)
@@ -325,24 +327,24 @@ int insertNode(int size)
         // We ran of the end of the list. 
         // If max of five then current = E.next which is -1 , previous = E
         //aka A-B-C-D-E. Insert between E.prev aka D and the index
-        ret = insertNodeInternal(LinkedList[previous].previous , global_index , size );
+        ret = insertNodeInternal(LinkedList[previous].previous , index , size );
 
 
     }
 
     //After our node is linked , we need to change some node parameters. 
-    LinkedList[global_index].size=size;
-    LinkedList[global_index].in_use=1;
-    LinkedList[global_index].type=PROCESS;
+    LinkedList[index].size=size;
+    LinkedList[index].in_use=1;
+    LinkedList[index].type=PROCESS;
 
     
     //Updating arena
     //index contains our current inserted node. 
     //index starts from the nex node's pointer.
     //the previous pointer 
-    int next = LinkedList[global_index].next;
-    LinkedList[global_index].arena = LinkedList[next].arena;
-    LinkedList[next].arena = LinkedList[global_index].arena+ LinkedList[global_index].size;
+    int next = LinkedList[index].next;
+    LinkedList[index].arena = LinkedList[next].arena;
+    LinkedList[next].arena = LinkedList[index].arena+ LinkedList[index].size;
 
 
     // printf("\nTWO NEW NODES THAT WERE CREATED ARE:\n");
@@ -391,16 +393,16 @@ int removeNodeInternal(int node)
 
 int removeNode(int size )
 {
-    global_index = rootNode;
+    int index = rootNode;
 
-    while(global_index!=-1)
+    while(index!=-1)
     {
     
-        if (LinkedList[global_index].size==size)
+        if (LinkedList[index].size==size)
         {
-            return removeNodeInternal(global_index);
+            return removeNodeInternal(index);
         }
-        global_index=LinkedList[global_index].next;
+        index=LinkedList[index].next;
     }
 
     return -1;
