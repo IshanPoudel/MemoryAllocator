@@ -426,17 +426,23 @@ int removeNode(int size )
 int main()
 {
     mavalloc_init(65534);
-    insertNode(100);
     insertNode(600);
     insertNode(300);
-    removeNode(600);
-   
-    insertNode(601);
-    
     insertNode(200);
-    insertNode(350);
+    insertNode(800);
+    insertNode(900);
+    insertNode(50);
+    insertNode(400);
+    insertNode(100);
     removeNode(200);
-    insertNode(25);
+    removeNode(600);
+    removeNode(50);
+    
+    // ----------------------
+
+    insertNode(30);
+    insertNode(550);
+    insertNode(60);
     printList();
    
     return 0;
