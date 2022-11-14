@@ -177,7 +177,7 @@ int insertNodeInternal(int previous , int current , int size )
         }
         else
         {
-            
+           
             printf("The index of the hole is %d\n" , index_of_hole);
             
             
@@ -221,19 +221,34 @@ int insertNodeInternal(int previous , int current , int size )
         // {
 
         // }
-        printf("I am adding to the front of the head\n");
+
+        
+        printf("I am adding to the front of the head , but there are processes behind it.\n");
         printf("The current index is %d , the previous index is %d \n" , current , previous);
+
+        //need to check if it is a perfect fit.
+
+        if (LinkedList[rootNode].size==size)
+        {
+            printf("We have a perfect fit at the front of the head\n");
+            LinkedList[rootNode].type=PROCESS;
+        }
+        else
+        {
+            //Create a new node to enter the value
+            LinkedList[current].next=rootNode;
+            LinkedList[rootNode].previous=current;
+            LinkedList[current].previous=-1;
+
+            //make linkedlist[rootnode] a hole.//Only come here when the hole size is bigger then requested size
+            LinkedList[rootNode].size=LinkedList[rootNode].size-size;
+            LinkedList[rootNode].type=HOLE;
+            rootNode=current;
+
+        }
         
        
-        //Create a new node to enter the value
-        LinkedList[current].next=rootNode;
-        LinkedList[rootNode].previous=current;
-        LinkedList[current].previous=-1;
-
-        //make linkedlist[rootnode] a hole.//Only come here when the hole size is bigger then requested size
-        LinkedList[rootNode].size=LinkedList[rootNode].size-size;
-        LinkedList[rootNode].type=HOLE;
-        rootNode=current;
+        
 
         
 
@@ -256,25 +271,39 @@ int insertNode(int size)
     //need to find where to insert it to end of
 
     //need to iterate until you find a hole which is bigger than what you need and add it there.
+    //check if hole at the head , if then insert from the head.
 
-    while( current>=0 && LinkedList[current].in_use )
+    if(LinkedList[current].type== HOLE && LinkedList[current].size>=size)
     {
-        printf("Current node at index %d is a %s and has size %zu\n" , current , enum_type[LinkedList[current].type] , LinkedList[current].size);
-        // if(LinkedList[current].size>size && LinkedList[current].type==HOLE)
-        if(LinkedList[LinkedList[current].next].size>=size && LinkedList[LinkedList[current].next].type==HOLE)
-        {
-            
-            printf("MATCH: Current node at index %d is a %s and has size %zu\n" , current ,enum_type[LinkedList[current].type] , LinkedList[current].size);
-            printf("MATCH: Next index is a hole\n");
-            previous=current;
-            break;
-        
-
-        }
-        current=LinkedList[current].next;
-        
+        printf("There is a free node at the head.\n");
+        previous=-1 ;
         
     }
+
+    else
+    {
+        while( current>=0 && LinkedList[current].in_use )
+        {
+            printf("Current node at index %d is a %s and has size %zu\n" , current , enum_type[LinkedList[current].type] , LinkedList[current].size);
+            // if(LinkedList[current].size>size && LinkedList[current].type==HOLE)
+            if(LinkedList[LinkedList[current].next].size>=size && LinkedList[LinkedList[current].next].type==HOLE)
+            {
+                
+                printf("MATCH: Current node at index %d is a %s and has size %zu\n" , current ,enum_type[LinkedList[current].type] , LinkedList[current].size);
+                printf("MATCH: Next index is a hole\n");
+                previous=current;
+                break;
+            
+
+            }
+            current=LinkedList[current].next;
+            
+            
+        }
+
+    }
+
+    
 
     //at this point the previous is in_use. 
     printf("The previous value %d  is currently filled with a process and the next one is either not in use or a hole . \n" , previous );
@@ -379,20 +408,9 @@ int main()
     mavalloc_init(65534);
     insertNode(100);
     insertNode(200);
-    insertNode(800);
-    insertNode(600);
-    insertNode(1000);
-    
-    
-   
-    
-    insertNode(10);
-    removeNode(800);
-    insertNode(800);
-    
-    removeNode(600);
-    insertNode(50);
-    insertNode(550);
+    removeNode(100);
+    insertNode(100);
+
     printList();
     return 0;
 
