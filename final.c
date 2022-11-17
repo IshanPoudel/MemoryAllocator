@@ -65,22 +65,23 @@ void printState()
 
 void visualizeHoleandProcess()
 {
-    
-
     int index = rootNode;
 
-    while (index!=-1)
+    for (int i=0; i<MAX_LINKED_LIST_SIZE;i++)
     {
-        if (LinkedList[index].type == HOLE)
+        if(LinkedList[i].in_use==1)
+        {
+            if(LinkedList[i].type==HOLE)
             {
-                printf(" HOLE: SIZE(%zu)\n" , LinkedList[index].size);
+                printf("HOLE\n");
+                printNode(i);
             }
-        else
+            else
             {
-                printf(" PROCESS: SIZE(%zu)\n" , LinkedList[index].size);
-
+                printf("PROCESS\n");
+                printNode(i);
             }
-        index=LinkedList[index].next;
+        }
 
     }
 }
@@ -235,6 +236,9 @@ int insertNode(int size)
 
 }
 
+//Rewrite the insert functions
+
+
 int removeNodeInternal(int node)
 {
 
@@ -291,52 +295,8 @@ int main()
     mavalloc_init(65534);
     
     insertNode(450);
-    insertNode(400);
-    insertNode(600);
-    insertNode(800);
-    insertNode(1000);
-
-    // printList();
-
-    removeNode(450);
-
-    printList();
-
-    insertNode(400);
-    
-    printf("\n\n");
-    printList();
-
-    
-    insertNode(100);
-    
-    removeNode(100);
-    insertNode(50);
-    
-    printf("\nALL THE NODES SO FAR\n\n\n");
-    printState();
-    printf("\n\n");
-    // printList();
-
-    removeNode(50);
-    removeNode(400);
-    // printList();
-
-    insertNode(200);
-    insertNode(4);
-    removeNode(800);
-    removeNode(4);
-
-
-    printf("\n\n");
-    // printList();
-
-    printf("\nAll the nodes after addition and removal\n");
-
-    printState();
 
     visualizeHoleandProcess();
-
     
 
    
